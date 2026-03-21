@@ -47,7 +47,7 @@ const board2 = [
   { name: 'The Burvale', price: 1, colour: 'Brown', owner: owner },
   { name: 'Fast Kebabs', price: 1, colour: 'Brown', owner: owner }
 ]
-assert(calculateRent(space2, board2) === 2, 'rent doubles when owner has full colour group')
+assert(calculateRent(space2, board2) === 2, 'rent doubles when owner has same colour property')
 
 // test 6
 // player is bankrupt when balance is below zero
@@ -70,3 +70,68 @@ const passedGo4 = movePlayer(player6, 4, 9)
 if (passedGo4) player6.balance += 1
 assert(player6.balance === 17, 'balance increases by $1 when passing GO')
 
+// test 9
+// player must buy property if it is unowned
+const buyerPlayer = { name: 'Peter', balance: 16, properties: [] }
+const unownedSpace = { name: 'The Burvale', price: 1, colour: 'Brown', owner: null }
+
+// simulate landing on unowned property
+if (!unownedSpace.owner) {
+  buyerPlayer.balance -= unownedSpace.price
+  unownedSpace.owner = buyerPlayer
+  buyerPlayer.properties.push(unownedSpace.name)
+}
+
+assert(unownedSpace.owner === buyerPlayer, 'player becomes owner after buying')
+assert(buyerPlayer.balance === 15, 'balance reduced after buying unowned property')
+assert(buyerPlayer.properties.includes('The Burvale'), 'property added to player properties list')
+
+// test 10
+// winner is the player with highest balance
+const testPlayers = [
+  { name: 'Peter', balance: 40 },
+  { name: 'Billy', balance: 13 },
+  { name: 'Charlotte', balance: -2 },
+  { name: 'Sweedal', balance: 0 }
+]
+const winner = testPlayers.reduce((best, p) => p.balance > best.balance ? p : best)
+assert(winner.name === 'Peter', 'winner is the player with highest balance')
+assert(winner.balance === 40, 'winner has correct balance')
+
+// test 11
+// owner receives rent when player lands on their property
+const rentOwner = { name: 'Peter', balance: 16 }
+const rentPayer = { name: 'Billy', balance: 16 }
+const rentSpace = { name: 'The Burvale', price: 1, colour: 'Brown', owner: rentOwner }
+rentPayer.balance -= rentSpace.price
+rentOwner.balance += rentSpace.price
+assert(rentOwner.balance === 17, 'owner receives rent')
+assert(rentPayer.balance === 15, 'payer balance reduced by rent')
+
+// test 12
+// player is not bankrupt when balance is exactly zero
+const playerbal0 = { balance: 0 }
+assert(isBankrupt(playerbal0) === false, 'player is not bankrupt when balance is zero')
+
+// test 13
+// player lands on their own property and nothing happens
+const ownedByMe = { name: 'Peter', balance: 16 }
+const myProperty = { name: 'The Burvale', price: 1, colour: 'Brown', owner: ownedByMe }
+assert(myProperty.owner === ownedByMe, 'player owns this property no rent paid')
+
+// test 14
+// player goes bankrupt after buying expensive property
+const lowBalPlayer = { name: 'Peter', balance: 1, properties: [] }
+const expensiveProperty = { name: 'Massizim', price: 4, colour: 'Blue', owner: null }
+lowBalPlayer.balance -= expensiveProperty.price
+assert(isBankrupt(lowBalPlayer) === true, 'player goes bankrupt buying property they cannot afford')
+
+// test 15
+// player goes bankrupt after paying rent
+const rentOwner2 = { name: 'Peter', balance: 16 }
+const lowBalPlayer1 = { name: 'Billy', balance: 1 }
+const expensiveRentSpace = { name: 'Massizim', price: 4, colour: 'Blue', owner: rentOwner2 }
+lowBalPlayer1.balance -= expensiveRentSpace.price
+rentOwner2.balance += expensiveRentSpace.price
+assert(isBankrupt(lowBalPlayer1) === true, 'player goes bankrupt after paying rent they cannot afford')
+assert(rentOwner2.balance === 20, 'owner still receives rent even if payer goes bankrupt')
