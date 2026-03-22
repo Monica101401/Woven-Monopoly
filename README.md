@@ -6,7 +6,7 @@
 
 ```bash
 
-cd src
+cd Woven-Monopoly-main
 
 node index.js
 
@@ -18,7 +18,7 @@ node index.js
 
 ```bash
 
-cd src/test
+cd Woven-Monopoly-main/test
 
 node game.test.js
 
