@@ -1,0 +1,13 @@
+{
+  "name": "new_coding_test",
+  "version": "1.0.0",
+  "description": "Your task is to write an application to play the game of Woven Monopoly.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}

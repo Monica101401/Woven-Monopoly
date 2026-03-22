@@ -1,6 +1,5 @@
 import { players, STARTING_BALANCE } from './players.js'
 import { loadBoard } from './board.js'
-import { loadRolls } from './rolls.js'
 
 // calculates the player position and checks if player has passed Go
 export function movePlayer(player, roll, boardSize) {
